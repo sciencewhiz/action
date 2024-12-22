@@ -23,6 +23,8 @@ async function main() {
 
     await exec("git", ["-c", "core.fileMode=false", "add", "--all"]);
 
+    let {branch} = await getExecOutput("git", ["branch", "--show-current"])
+
     // Git consistently uses unix-style paths, so we do not need to worry about path conversions.
     let {stdout} = await getExecOutput("git", ["diff", "--name-only", "--staged", "--no-renames"])
     if (stdout === "") {
@@ -110,8 +112,12 @@ async function main() {
     )
     if (event.pull_request) {
         url += "&pull=" + encodeURIComponent(event.pull_request.number);
-    } else {
+    } else if (event.ref) {
         url += "&branch=" + encodeURIComponent(event.ref.replace(/^refs\/heads\//, ""));
+    } else if (branch) {
+        url += "&branch=" + encodeURIComponent(branch);
+    } else {
+        setFailed("Failed to determine pull request or branch");
     }
 
     const http = new HttpClient("autofix-action/v2");
