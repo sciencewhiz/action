@@ -114,10 +114,13 @@ async function main() {
         url += "&pull=" + encodeURIComponent(event.pull_request.number);
     } else if (event.ref) {
         url += "&branch=" + encodeURIComponent(event.ref.replace(/^refs\/heads\//, ""));
-    } else if (branch) {
-        url += "&branch=" + encodeURIComponent(branch);
     } else {
-        setFailed("Failed to determine pull request or branch");
+        url += "&branch=" + encodeURIComponent(branch);
+    } //else {
+        //setFailed("Failed to determine pull request or branch");
+    //}
+    if (isDebug()) {
+        console.log(url);
     }
 
     const http = new HttpClient("autofix-action/v2");
