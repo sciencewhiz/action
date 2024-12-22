@@ -25,7 +25,7 @@ async function main() {
 
     let {branch} = await getExecOutput("git", ["branch", "--show-current"])
     if (isDebug()) {
-        console.log("Branch: " + branch);
+        console.log("Branch: " + branch.stdout);
     }
 
     // Git consistently uses unix-style paths, so we do not need to worry about path conversions.
@@ -118,12 +118,12 @@ async function main() {
     } else if (event.ref) {
         url += "&branch=" + encodeURIComponent(event.ref.replace(/^refs\/heads\//, ""));
     } else {
-        url += "&branch=" + encodeURIComponent(branch);
+        url += "&branch=" + encodeURIComponent(branch.stdout);
     } //else {
         //setFailed("Failed to determine pull request or branch");
     //}
     if (isDebug()) {
-        console.log("Branch: " + branch);
+        console.log("Branch: " + branch.stdout);
         console.log(url);
     }
 
