@@ -24,6 +24,9 @@ async function main() {
     await exec("git", ["-c", "core.fileMode=false", "add", "--all"]);
 
     let {branch} = await getExecOutput("git", ["branch", "--show-current"])
+    if (isDebug()) {
+        console.log("Branch: " + branch);
+    }
 
     // Git consistently uses unix-style paths, so we do not need to worry about path conversions.
     let {stdout} = await getExecOutput("git", ["diff", "--name-only", "--staged", "--no-renames"])
@@ -120,6 +123,7 @@ async function main() {
         //setFailed("Failed to determine pull request or branch");
     //}
     if (isDebug()) {
+        console.log("Branch: " + branch);
         console.log(url);
     }
 
